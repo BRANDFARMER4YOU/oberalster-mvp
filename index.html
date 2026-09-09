@@ -216,15 +216,15 @@ const players = ["Tobias", "Tim", "Torben", "Janne"];
 const initials = { Tobias: "TH", Tim: "TW", Torben: "TS", Janne: "JN" };
 
 const holes = [
-  { n: 1, title: "Warm-up-Chaos", joke: "Erster Schlag des Tages — Kaffee hat noch nicht gewirkt. Wer trifft am wackeligsten ab?", icon: "☕️", accent: "#8d6e63" },
-  { n: 2, title: "Der Frühstart-Faul", joke: "Wer redet beim Abschlag der anderen dazwischen und lenkt am dreistesten ab, kassiert den Punkt.", icon: "🗣️", accent: "#5c6bc0" },
-  { n: 3, title: "Der Mulligan-Minister", joke: "Wer als Erster laut „Das zählt nicht!“ ruft, obwohl es zählt.", icon: "🙅", accent: "#8e24aa" },
-  { n: 4, title: "Fairway-Philosoph", joke: "Bestes Ausreden-Zitat für einen verhauenen Schlag (\"der Wind\", \"der Schuh\", \"die Sonne\").", icon: "🌬️", accent: "#00897b" },
-  { n: 5, title: "Der Rechenkünstler", joke: "Wer die eigene Schlagzahl am „kreativsten“ rundet, gewinnt (ironisch gemeint!).", icon: "🧮", accent: "#fb8c00" },
-  { n: 6, title: "Ruhepuls-Champion", joke: "Bester Schlag NACHDEM einer schon geflucht hat — das Comeback des Lochs.", icon: "😤", accent: "#43a047" },
-  { n: 7, title: "Putt-Attentäter", joke: "Wenigste Putts auf dem Grün — ein 1-Putt zählt doppelt.", icon: "🎯", accent: "#3949ab" },
-  { n: 8, title: "Bunker-Ballett", joke: "Schönster (oder lustigster) Ausstieg aus dem Sand.", icon: "🏖️", accent: "#c9a227" },
-  { n: 9, title: "Seemann des Tages", joke: "Der berüchtigte Oberalster-See wartet! Wer als Erstes hineinschlägt, kriegt trotzdem den Punkt — für Mut zur Nässe. 🌊", icon: "🌊", accent: "#0288d1" },
+  { n: 1, title: "Slice des Tages", joke: "Wessen Abschlag geht am wildesten daneben (links oder rechts raus)?", icon: "🌀", accent: "#8d6e63" },
+  { n: 2, title: "Baum-Treffer", joke: "Wer als Erster einen Baum trifft, kassiert den Punkt.", icon: "🌳", accent: "#5c6bc0" },
+  { n: 3, title: "Bunker-Landung", joke: "Wer auf dieser Bahn im Sand landet, gewinnt den Punkt (Pechvogel-Ehre).", icon: "🏖️", accent: "#c9a227" },
+  { n: 4, title: "Nasser Schlag", joke: "Wer den Ball ins Wasser haut, kriegt trotzdem den Punkt — für Mut zur Nässe.", icon: "💦", accent: "#00897b" },
+  { n: 5, title: "Drei-Putt-Drama", joke: "Wer 3 oder mehr Putts auf dem Grün braucht, sichert sich den Punkt.", icon: "🎯", accent: "#fb8c00" },
+  { n: 6, title: "Grün in Regulation", joke: "Wer als Erster das Grün in Regulation trifft (in der vorgegebenen Schlagzahl), holt sich den Punkt.", icon: "🟢", accent: "#43a047" },
+  { n: 7, title: "Längster Drive", joke: "Weitester Abschlag der Gruppe auf dieser Bahn.", icon: "🚀", accent: "#3949ab" },
+  { n: 8, title: "Schlag-Rekord", joke: "Wer die meisten Schläge auf dieser Bahn braucht, bekommt den (Trost-)Punkt.", icon: "🔢", accent: "#8e24aa" },
+  { n: 9, title: "Seemann des Tages", joke: "Der berüchtigte Oberalster-See wartet! Wer hineinschlägt, kriegt den Punkt — für Mut zur Nässe. 🌊", icon: "🌊", accent: "#0288d1" },
 ];
 
 let scores = JSON.parse(localStorage.getItem('oberalster_scores_v2') || '{}');
