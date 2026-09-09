@@ -2,131 +2,256 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Oberalster Front-9 MVP</title>
 <style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: -apple-system, Helvetica, Arial, sans-serif;
-    background: linear-gradient(180deg, #0d3b1e 0%, #1a5c33 100%);
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.06) 0%, transparent 40%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 40px),
+      linear-gradient(160deg, #0b3d1e 0%, #14602c 45%, #1c7a3a 100%);
     color: #fff;
-    margin: 0;
-    padding: 16px;
     min-height: 100vh;
+    padding-bottom: 40px;
   }
-  h1 {
+  .header {
     text-align: center;
-    font-size: 22px;
-    margin-bottom: 4px;
+    padding: 22px 16px 14px;
+    position: relative;
+  }
+  .header h1 {
+    font-size: 21px;
+    margin: 0;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .flag {
+    display: inline-block;
+    animation: wave 2.2s ease-in-out infinite;
+    transform-origin: bottom left;
+  }
+  @keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(8deg); }
   }
   .subtitle {
-    text-align: center;
-    font-size: 13px;
+    font-size: 12px;
+    opacity: 0.75;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .water-strip {
+    height: 6px;
+    background: linear-gradient(90deg, #1c7a3a, #4fc3f7, #1c7a3a);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    border-radius: 3px;
+    margin: 10px 16px 0;
     opacity: 0.8;
-    margin-bottom: 20px;
   }
-  .players {
-    display: flex;
-    justify-content: space-around;
-    background: rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 10px;
-    margin-bottom: 16px;
+  @keyframes shimmer {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
   }
-  .player {
-    text-align: center;
+
+  .scoreboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 18px 14px;
   }
-  .player-name { font-weight: bold; font-size: 14px; }
-  .player-score { font-size: 24px; font-weight: 900; color: #ffd54f; }
-  .hole {
-    background: rgba(255,255,255,0.08);
+  .player-card {
+    background: rgba(255,255,255,0.95);
+    color: #0b3d1e;
     border-radius: 14px;
-    padding: 14px;
+    padding: 10px 4px 8px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+  .player-card.leader {
+    background: linear-gradient(160deg, #fff9e0, #ffe6a3);
+    box-shadow: 0 0 0 2px #ffb300, 0 4px 14px rgba(255,179,0,0.4);
+    transform: translateY(-3px);
+  }
+  .crown { font-size: 14px; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #1c7a3a;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px;
+    margin: 0 auto 4px;
+  }
+  .player-name { font-size: 11px; font-weight: 700; }
+  .player-score { font-size: 22px; font-weight: 900; margin-top: 2px; }
+
+  .holes { padding: 0 14px; }
+  .hole {
+    background: rgba(255,255,255,0.97);
+    color: #17331f;
+    border-radius: 16px;
+    padding: 14px 14px 12px;
     margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    border-left: 6px solid var(--accent, #1c7a3a);
   }
-  .hole-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 2px;
+  .hole-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
   }
+  .hole-num {
+    background: var(--accent, #1c7a3a);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 13px;
+    flex-shrink: 0;
+  }
+  .hole-title { font-weight: 800; font-size: 15px; }
+  .hole-icon { margin-left: auto; font-size: 18px; }
   .hole-joke {
-    font-size: 13px;
-    font-style: italic;
-    opacity: 0.85;
+    font-size: 12.5px;
+    color: #4a5c4e;
     margin-bottom: 10px;
+    line-height: 1.35;
   }
   .btn-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 6px;
-    flex-wrap: wrap;
   }
-  button {
-    flex: 1;
-    min-width: 60px;
-    padding: 10px 4px;
+  button.pbtn {
+    padding: 11px 2px;
     border: none;
-    border-radius: 8px;
-    background: #2e7d4f;
-    color: white;
-    font-weight: bold;
-    font-size: 13px;
+    border-radius: 10px;
+    background: #eef5ee;
+    color: #14602c;
+    font-weight: 700;
+    font-size: 12.5px;
     cursor: pointer;
+    border: 1.5px solid #cfe3d2;
+    transition: all 0.15s ease;
   }
-  button:active { background: #ffd54f; color: #0d3b1e; }
+  button.pbtn:active {
+    background: #1c7a3a;
+    color: white;
+    transform: scale(0.94);
+  }
+
   .reset {
     display: block;
-    margin: 20px auto 0;
-    background: #b71c1c;
-    padding: 10px 24px;
+    margin: 22px auto 0;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
   }
   .winner-banner {
     text-align: center;
-    font-size: 15px;
-    margin-top: 16px;
-    padding: 10px;
-    background: rgba(255,213,79,0.2);
-    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 16px 20px 0;
+    padding: 12px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 12px;
+    border: 1px dashed rgba(255,255,255,0.3);
+  }
+  .footer-note {
+    text-align: center;
+    font-size: 10.5px;
+    opacity: 0.55;
+    margin-top: 18px;
+    padding: 0 20px;
+  }
+
+  /* Ball pop animation */
+  .ball {
+    position: fixed;
+    font-size: 22px;
+    pointer-events: none;
+    animation: popfly 0.7s ease-out forwards;
+    z-index: 99;
+  }
+  @keyframes popfly {
+    0% { transform: translateY(0) scale(0.6); opacity: 1; }
+    60% { transform: translateY(-70px) scale(1.3); opacity: 1; }
+    100% { transform: translateY(-110px) scale(0.8); opacity: 0; }
   }
 </style>
 </head>
 <body>
 
-<h1>🏌️ Oberalster Front-9 MVP</h1>
-<div class="subtitle">Tobias · Tim · Torben · Janne — Loch 1-9</div>
+<div class="header">
+  <h1><span class="flag">⛳</span> Oberalster Front-9 MVP</h1>
+  <div class="subtitle">Tobias · Tim · Torben · Janne — Loch 1–9</div>
+</div>
+<div class="water-strip"></div>
 
-<div class="players" id="scoreboard"></div>
+<div class="scoreboard" id="scoreboard"></div>
+<div class="winner-banner" id="winnerBanner"></div>
 
-<div id="holes"></div>
+<div class="holes" id="holes"></div>
 
 <button class="reset" onclick="resetAll()">🔄 Alles zurücksetzen</button>
-<div class="winner-banner" id="winnerBanner"></div>
+<div class="footer-note">Punktestand wird lokal auf diesem Handy gespeichert 🏌️</div>
 
 <script>
 const players = ["Tobias", "Tim", "Torben", "Janne"];
+const initials = { Tobias: "TH", Tim: "TW", Torben: "TS", Janne: "JN" };
 
 const holes = [
-  { n: 1, title: "Warm-up-Chaos", joke: "Erster Schlag des Tages — Kaffee hat noch nicht gewirkt. Wer trifft am wackeligsten?" },
-  { n: 2, title: "Der Frühstart-Faul", joke: "Wer redet beim Abschlag der anderen dazwischen und lenkt am dreistesten ab, kassiert den Punkt." },
-  { n: 3, title: "Der Mulligan-Minister", joke: "Wer als Erster laut 'Das zählt nicht!' ruft, obwohl es zählt." },
-  { n: 4, title: "Fairway-Philosoph", joke: "Bestes Ausreden-Zitat für einen verhauenen Schlag ('der Wind', 'der Schuh', 'die Sonne')." },
-  { n: 5, title: "Der Rechenkünstler", joke: "Wer bei der eigenen Schlagzahl am 'kreativsten' rundet, gewinnt (ironisch gemeint!)." },
-  { n: 6, title: "Ruhepuls-Champion", joke: "Bester Schlag NACHDEM einer schon geflucht hat — Comeback des Lochs." },
-  { n: 7, title: "Putt-Attentäter", joke: "Wenigste Putts auf dem Grün — 1-Putt zählt doppelt." },
-  { n: 8, title: "Bunker-Ballett", joke: "Schönster (oder lustigster) Ausstieg aus dem Sand." },
-  { n: 9, title: "Seemann des Tages 🌊", joke: "Der berüchtigte Oberalster-See wartet! Wer als Erstes reinschlägt, kriegt trotzdem den Punkt — für Mut zur Nässe." },
+  { n: 1, title: "Warm-up-Chaos", joke: "Erster Schlag des Tages — Kaffee hat noch nicht gewirkt. Wer trifft am wackeligsten ab?", icon: "☕️", accent: "#8d6e63" },
+  { n: 2, title: "Der Frühstart-Faul", joke: "Wer redet beim Abschlag der anderen dazwischen und lenkt am dreistesten ab, kassiert den Punkt.", icon: "🗣️", accent: "#5c6bc0" },
+  { n: 3, title: "Der Mulligan-Minister", joke: "Wer als Erster laut „Das zählt nicht!“ ruft, obwohl es zählt.", icon: "🙅", accent: "#8e24aa" },
+  { n: 4, title: "Fairway-Philosoph", joke: "Bestes Ausreden-Zitat für einen verhauenen Schlag (\"der Wind\", \"der Schuh\", \"die Sonne\").", icon: "🌬️", accent: "#00897b" },
+  { n: 5, title: "Der Rechenkünstler", joke: "Wer die eigene Schlagzahl am „kreativsten“ rundet, gewinnt (ironisch gemeint!).", icon: "🧮", accent: "#fb8c00" },
+  { n: 6, title: "Ruhepuls-Champion", joke: "Bester Schlag NACHDEM einer schon geflucht hat — das Comeback des Lochs.", icon: "😤", accent: "#43a047" },
+  { n: 7, title: "Putt-Attentäter", joke: "Wenigste Putts auf dem Grün — ein 1-Putt zählt doppelt.", icon: "🎯", accent: "#3949ab" },
+  { n: 8, title: "Bunker-Ballett", joke: "Schönster (oder lustigster) Ausstieg aus dem Sand.", icon: "🏖️", accent: "#c9a227" },
+  { n: 9, title: "Seemann des Tages", joke: "Der berüchtigte Oberalster-See wartet! Wer als Erstes hineinschlägt, kriegt trotzdem den Punkt — für Mut zur Nässe. 🌊", icon: "🌊", accent: "#0288d1" },
 ];
 
-let scores = JSON.parse(localStorage.getItem('oberalster_scores') || '{}');
+let scores = JSON.parse(localStorage.getItem('oberalster_scores_v2') || '{}');
 players.forEach(p => { if (!(p in scores)) scores[p] = 0; });
 
 function save() {
-  localStorage.setItem('oberalster_scores', JSON.stringify(scores));
+  localStorage.setItem('oberalster_scores_v2', JSON.stringify(scores));
   render();
 }
 
-function addPoint(player) {
+function addPoint(player, evt) {
   scores[player]++;
   save();
+  spawnBall(evt);
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+
+function spawnBall(evt) {
+  if (!evt) return;
+  const ball = document.createElement('div');
+  ball.className = 'ball';
+  ball.innerText = '⛳';
+  const rect = evt.target.getBoundingClientRect();
+  ball.style.left = (rect.left + rect.width / 2 - 11) + 'px';
+  ball.style.top = (rect.top - 10) + 'px';
+  document.body.appendChild(ball);
+  setTimeout(() => ball.remove(), 700);
 }
 
 function resetAll() {
@@ -137,23 +262,33 @@ function resetAll() {
 }
 
 function render() {
+  const max = Math.max(...players.map(p => scores[p]));
   const sb = document.getElementById('scoreboard');
-  sb.innerHTML = players.map(p =>
-    `<div class="player"><div class="player-name">${p}</div><div class="player-score">${scores[p]}</div></div>`
-  ).join('');
+  sb.innerHTML = players.map(p => {
+    const isLeader = scores[p] === max && max > 0;
+    return `<div class="player-card ${isLeader ? 'leader' : ''}">
+      ${isLeader ? '<div class="crown">👑</div>' : ''}
+      <div class="avatar">${initials[p]}</div>
+      <div class="player-name">${p}</div>
+      <div class="player-score">${scores[p]}</div>
+    </div>`;
+  }).join('');
 
   const holesDiv = document.getElementById('holes');
   holesDiv.innerHTML = holes.map(h => `
-    <div class="hole">
-      <div class="hole-title">Loch ${h.n}: ${h.title}</div>
+    <div class="hole" style="--accent:${h.accent}">
+      <div class="hole-head">
+        <div class="hole-num">${h.n}</div>
+        <div class="hole-title">${h.title}</div>
+        <div class="hole-icon">${h.icon}</div>
+      </div>
       <div class="hole-joke">${h.joke}</div>
       <div class="btn-row">
-        ${players.map(p => `<button onclick="addPoint('${p}')">${p}</button>`).join('')}
+        ${players.map(p => `<button class="pbtn" onclick="addPoint('${p}', event)">${p}</button>`).join('')}
       </div>
     </div>
   `).join('');
 
-  const max = Math.max(...players.map(p => scores[p]));
   const banner = document.getElementById('winnerBanner');
   if (max > 0) {
     const leaders = players.filter(p => scores[p] === max);
@@ -161,7 +296,7 @@ function render() {
       ? `🤝 Gleichstand an der Spitze: ${leaders.join(' & ')} mit ${max} Punkten!`
       : `👑 Aktueller MVP: ${leaders[0]} mit ${max} Punkten!`;
   } else {
-    banner.innerText = "Noch keine Punkte vergeben — auf geht's!";
+    banner.innerText = "Noch keine Punkte vergeben — auf geht's! ⛳";
   }
 }
 
