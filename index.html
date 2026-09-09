@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oberalster Front-9 MVP</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0d3b1e 0%, #1a5c33 100%);
+    color: #fff;
+    margin: 0;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 20px;
+  }
+  .players {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 16px;
+  }
+  .player {
+    text-align: center;
+  }
+  .player-name { font-weight: bold; font-size: 14px; }
+  .player-score { font-size: 24px; font-weight: 900; color: #ffd54f; }
+  .hole {
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .hole-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+  .hole-joke {
+    font-size: 13px;
+    font-style: italic;
+    opacity: 0.85;
+    margin-bottom: 10px;
+  }
+  .btn-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  button {
+    flex: 1;
+    min-width: 60px;
+    padding: 10px 4px;
+    border: none;
+    border-radius: 8px;
+    background: #2e7d4f;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  button:active { background: #ffd54f; color: #0d3b1e; }
+  .reset {
+    display: block;
+    margin: 20px auto 0;
+    background: #b71c1c;
+    padding: 10px 24px;
+  }
+  .winner-banner {
+    text-align: center;
+    font-size: 15px;
+    margin-top: 16px;
+    padding: 10px;
+    background: rgba(255,213,79,0.2);
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>🏌️ Oberalster Front-9 MVP</h1>
+<div class="subtitle">Tobias · Tim · Torben · Janne — Loch 1-9</div>
+
+<div class="players" id="scoreboard"></div>
+
+<div id="holes"></div>
+
+<button class="reset" onclick="resetAll()">🔄 Alles zurücksetzen</button>
+<div class="winner-banner" id="winnerBanner"></div>
+
+<script>
+const players = ["Tobias", "Tim", "Torben", "Janne"];
+
+const holes = [
+  { n: 1, title: "Warm-up-Chaos", joke: "Erster Schlag des Tages — Kaffee hat noch nicht gewirkt. Wer trifft am wackeligsten?" },
+  { n: 2, title: "Der Frühstart-Faul", joke: "Wer redet beim Abschlag der anderen dazwischen und lenkt am dreistesten ab, kassiert den Punkt." },
+  { n: 3, title: "Der Mulligan-Minister", joke: "Wer als Erster laut 'Das zählt nicht!' ruft, obwohl es zählt." },
+  { n: 4, title: "Fairway-Philosoph", joke: "Bestes Ausreden-Zitat für einen verhauenen Schlag ('der Wind', 'der Schuh', 'die Sonne')." },
+  { n: 5, title: "Der Rechenkünstler", joke: "Wer bei der eigenen Schlagzahl am 'kreativsten' rundet, gewinnt (ironisch gemeint!)." },
+  { n: 6, title: "Ruhepuls-Champion", joke: "Bester Schlag NACHDEM einer schon geflucht hat — Comeback des Lochs." },
+  { n: 7, title: "Putt-Attentäter", joke: "Wenigste Putts auf dem Grün — 1-Putt zählt doppelt." },
+  { n: 8, title: "Bunker-Ballett", joke: "Schönster (oder lustigster) Ausstieg aus dem Sand." },
+  { n: 9, title: "Seemann des Tages 🌊", joke: "Der berüchtigte Oberalster-See wartet! Wer als Erstes reinschlägt, kriegt trotzdem den Punkt — für Mut zur Nässe." },
+];
+
+let scores = JSON.parse(localStorage.getItem('oberalster_scores') || '{}');
+players.forEach(p => { if (!(p in scores)) scores[p] = 0; });
+
+function save() {
+  localStorage.setItem('oberalster_scores', JSON.stringify(scores));
+  render();
+}
+
+function addPoint(player) {
+  scores[player]++;
+  save();
+}
+
+function resetAll() {
+  if (confirm('Wirklich alle Punkte zurücksetzen?')) {
+    players.forEach(p => scores[p] = 0);
+    save();
+  }
+}
+
+function render() {
+  const sb = document.getElementById('scoreboard');
+  sb.innerHTML = players.map(p =>
+    `<div class="player"><div class="player-name">${p}</div><div class="player-score">${scores[p]}</div></div>`
+  ).join('');
+
+  const holesDiv = document.getElementById('holes');
+  holesDiv.innerHTML = holes.map(h => `
+    <div class="hole">
+      <div class="hole-title">Loch ${h.n}: ${h.title}</div>
+      <div class="hole-joke">${h.joke}</div>
+      <div class="btn-row">
+        ${players.map(p => `<button onclick="addPoint('${p}')">${p}</button>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  const max = Math.max(...players.map(p => scores[p]));
+  const banner = document.getElementById('winnerBanner');
+  if (max > 0) {
+    const leaders = players.filter(p => scores[p] === max);
+    banner.innerText = leaders.length > 1
+      ? `🤝 Gleichstand an der Spitze: ${leaders.join(' & ')} mit ${max} Punkten!`
+      : `👑 Aktueller MVP: ${leaders[0]} mit ${max} Punkten!`;
+  } else {
+    banner.innerText = "Noch keine Punkte vergeben — auf geht's!";
+  }
+}
+
+render();
+</script>
+
+</body>
+</html>
